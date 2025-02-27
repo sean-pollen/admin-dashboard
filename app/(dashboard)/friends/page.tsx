@@ -1,19 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import SpotifyProfile from '@/components/SpotifyProfile';
 
 export default function FriendsPage() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Friends</CardTitle>
-        <CardDescription>View all Friends and their orders.</CardDescription>
-      </CardHeader>
-      <CardContent></CardContent>
-    </Card>
-  );
+  return <SpotifyProfile />;
 }

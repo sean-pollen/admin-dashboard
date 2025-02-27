@@ -15,20 +15,20 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            This demo uses GitHub for authentication.
+            This demo uses Spotify for authentication.
           </CardDescription>
         </CardHeader>
         <CardFooter>
           <form
             action={async () => {
               'use server';
-              await signIn('github', {
+              await signIn('spotify', {
                 redirectTo: '/'
               });
             }}
             className="w-full"
           >
-            <Button className="w-full">Sign in with GitHub</Button>
+            <Button className="w-full">Sign in with Spotify</Button>
           </form>
         </CardFooter>
       </Card>
