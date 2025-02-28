@@ -1,3 +1,4 @@
+import { url } from 'inspector';
 import NextAuth from 'next-auth';
 import SpotifyProvider from 'next-auth/providers/spotify';
 
@@ -5,7 +6,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      authorization: {
+        url: 'https://accounts.spotify.com/authorize',
+        params: {
+          scope:
+            'user-read-email user-top-read playlist-modify-private user-library-read'
+        }
+      }
     })
   ],
   callbacks: {
