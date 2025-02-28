@@ -23,7 +23,7 @@ export default function LoginPage() {
             action={async () => {
               'use server';
               await signIn('spotify', {
-                redirectTo: '/'
+                redirectTo: '/home'
               });
             }}
             className="w-full"

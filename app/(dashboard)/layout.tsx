@@ -2,10 +2,10 @@ import Link from 'next/link';
 import {
   Home,
   LineChart,
-  Package,
-  Package2,
+  DiscAlbum,
   PanelLeft,
-  Settings
+  Settings,
+  Package2
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -53,12 +53,12 @@ function DesktopNav() {
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <VercelLogo className="h-3 w-3 transition-all group-hover:scale-110" />
 
-        <NavItem href="/" label="Dashboard">
+        <NavItem href="/home" label="Dashboard">
           <Home className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/products" label="Products">
-          <Package className="h-5 w-5" />
+        <NavItem href="/albums" label="Albums">
+          <DiscAlbum className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -103,13 +103,6 @@ function MobileNav() {
           >
             <Home className="h-5 w-5" />
             Dashboard
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-foreground"
-          >
-            <Package className="h-5 w-5" />
-            Products
           </Link>
           <Link
             href="#"
