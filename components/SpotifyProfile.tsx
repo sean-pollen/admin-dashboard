@@ -1,20 +1,32 @@
-'use client'; // 👈 Must be a client component
+'use client';
 
-import { useEffect, useState } from 'react';
 import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { useQuery } from '@tanstack/react-query';
+
+async function fetchSpotifyProfile() {
+  const res = await fetch('/api/spotify');
+  const data = await res.json();
+  return data;
+}
+
+async function fetchSpotifyAlbums() {
+  const res = await fetch('/api/spotify/albums');
+  const data = await res.json();
+  return data;
+}
 
 export default function SpotifyProfile() {
-  const [profile, setProfile] = useState<any>(null);
+  const { data: profile, error } = useQuery({
+    queryKey: ['spotifyProfile'],
+    queryFn: fetchSpotifyProfile,
+    staleTime: 1000 * 60 * 5
+  });
 
-  useEffect(() => {
-    async function fetchSpotifyProfile() {
-      const res = await fetch('/api/spotify'); // 👈 Calls your API route
-      const data = await res.json();
-      setProfile(data);
-    }
-
-    fetchSpotifyProfile();
-  }, []);
+  const { data: albums } = useQuery({
+    queryKey: ['spotifyAlbums'],
+    queryFn: fetchSpotifyAlbums,
+    staleTime: 1000 * 60 * 5
+  });
 
   return (
     <Card>
