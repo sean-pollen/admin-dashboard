@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth';
 import { NextResponse } from 'next/server';
+import { isBefore } from 'date-fns';
 
 export async function middleware(request: Request) {
   if (request.url.includes('/login')) {
@@ -8,7 +9,11 @@ export async function middleware(request: Request) {
 
   const session = await auth();
 
-  if (!session || !session.user || new Date(session.expires) < new Date()) {
+  if (
+    !session ||
+    !session.user ||
+    isBefore(new Date(session.expires), new Date())
+  ) {
     const loginUrl = new URL('/login', request.url);
     return NextResponse.redirect(loginUrl);
   }
