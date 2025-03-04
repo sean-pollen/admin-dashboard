@@ -1,5 +1,5 @@
 import { auth } from '@/lib/auth';
-import { release } from 'os';
+import { NextResponse } from 'next/server';
 
 const params = new URLSearchParams({
   limit: '50'
@@ -10,7 +10,7 @@ export async function GET() {
   const session = await auth();
 
   if (!session) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const searchResponse = await fetch(
@@ -24,7 +24,7 @@ export async function GET() {
   );
 
   if (!searchResponse.ok) {
-    return Response.json(
+    return NextResponse.json(
       { error: 'Failed to fetch' },
       { status: searchResponse.status }
     );
@@ -43,7 +43,7 @@ export async function GET() {
     };
   });
 
-  return Response.json(albums);
+  return NextResponse.json(albums);
 }
 
 export type Album = {
