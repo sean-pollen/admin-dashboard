@@ -22,11 +22,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         await handleLogin(account.providerAccountId, profile.email);
         token.accessToken = account.access_token;
       }
+
+      token.exp = Date.now() + 3600 * 1000;
       return token;
     },
 
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
+      // @ts-ignore bullshit type error
+      session.expires = new Date(token.exp as number).toISOString();
       return session;
     }
   }

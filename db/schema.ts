@@ -1,6 +1,6 @@
 import { db } from 'db';
 import { eq, sql } from 'drizzle-orm';
-import { text, timestamp, serial, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { text, timestamp, pgTable, uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id')
