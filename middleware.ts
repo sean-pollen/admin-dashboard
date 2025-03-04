@@ -1,10 +1,14 @@
 import { auth } from '@/lib/auth';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { isBefore } from 'date-fns';
 
-export async function middleware(request: Request) {
+export async function middleware(request: NextRequest) {
   if (request.url.includes('/login')) {
     return NextResponse.next();
+  }
+
+  if (request.nextUrl.pathname == '/') {
+    return NextResponse.redirect(new URL('/home', request.url));
   }
 
   const session = await auth();
