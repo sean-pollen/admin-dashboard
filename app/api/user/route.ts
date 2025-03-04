@@ -17,10 +17,7 @@ export async function GET() {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  const response = await db
-    .select()
-    .from(users)
-    .where(and(eq(users.email, email), eq(users.name, name)));
+  const response = await db.select().from(users).where(eq(users.email, email));
 
   return NextResponse.json(response);
 }
