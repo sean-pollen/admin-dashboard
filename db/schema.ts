@@ -12,6 +12,9 @@ export const users = pgTable('users', {
   lastLogin: timestamp('last_login')
 });
 
+export type User = typeof users.$inferSelect;
+export type UserInsert = typeof users.$inferInsert;
+
 export const handleLogin = async (providerId: string, email: string) => {
   const existingUser = await db
     .selectDistinct()
@@ -35,6 +38,3 @@ export const handleLogin = async (providerId: string, email: string) => {
       .where(eq(users.providerId, `${providerId}`));
   }
 };
-
-export type User = typeof users.$inferSelect;
-export type UserInsert = typeof users.$inferInsert;

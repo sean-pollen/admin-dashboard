@@ -1,6 +1,6 @@
+import { handleLogin } from 'db/schema';
 import NextAuth from 'next-auth';
 import SpotifyProvider from 'next-auth/providers/spotify';
-import { handleLogin } from 'db/schema';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
