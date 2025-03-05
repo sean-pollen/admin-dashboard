@@ -1,9 +1,7 @@
-const TopArtistsPage = () => {
-  return (
-    <div>
-      <h1>Top Artists</h1>
-    </div>
-  );
+import ArtistsList from 'app/(dashboard)/top-artists/_components/ArtistsTable';
+
+const TopArtistsPage = async () => {
+  return <ArtistsList />;
 };
 
 export default TopArtistsPage;

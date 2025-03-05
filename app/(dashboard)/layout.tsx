@@ -56,13 +56,16 @@ function DesktopNav() {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-
         <NavItem href="/home" label="Dashboard">
           <Home className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/albums" label="Albums">
           <DiscAlbum className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/top-artists" label="Top Artists">
+          <LineChart className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
