@@ -16,8 +16,8 @@ const ArtistsList = () => {
     staleTime: 1000 * 60 * 5
   });
 
-  return data?.map((artist) => {
-    return <ArtistCard key={artist.uri} {...artist} />;
+  return data?.map((artist, idx) => {
+    return <ArtistCard rank={idx} key={artist.uri} {...artist} />;
   });
 };
 

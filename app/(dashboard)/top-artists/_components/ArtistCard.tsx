@@ -1,17 +1,10 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import { Artist } from 'app/api/spotify/top-artists/route';
+import { Badge } from '@/components/ui/badge';
 
-export const ArtistCard = (artist: Artist) => {
-  // 'id' | 'name' | 'images' | 'genres' | 'popularity' | 'uri'
-
+export const ArtistCard = (artist: Artist & { rank: number }) => {
+  const title = `${artist.name}`;
   return (
     <Card
       key={artist.name}
@@ -26,9 +19,35 @@ export const ArtistCard = (artist: Artist) => {
           className="w-1/3 p-4 rounded-sm"
         />
         <CardContent className="p-4 w-2/3">
-          <CardTitle className="text-3xl font-bold">{artist.name}</CardTitle>
+          <div className="flex flex-row items-center">
+            <div>
+              <CardTitle className="text-3xl font-bold">{title}</CardTitle>
+              <GenreBadges genres={artist.genres} />
+            </div>
+            <Badge className="px-6 py-2 text-xl font-bold ml-auto">
+              {artist.rank + 1}
+            </Badge>
+          </div>
         </CardContent>
       </div>
     </Card>
+  );
+};
+
+const GenreBadges = ({ genres }: { genres: string[] }) => {
+  return (
+    <div className="flex flex-row gap-2 my-3">
+      {genres.map((genre) => (
+        <Badge className={'px-2 py-1'} key={genre} variant={'secondary'}>
+          {genre
+            .split(' ')
+            .map(
+              (word) =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join(' ')}
+        </Badge>
+      ))}
+    </div>
   );
 };

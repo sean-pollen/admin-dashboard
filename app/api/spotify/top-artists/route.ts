@@ -10,7 +10,7 @@ export async function GET() {
   }
 
   const searchResponse = await fetch(
-    `https://api.spotify.com/v1/me/top/artists`,
+    `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
     {
       method: 'GET',
       headers: {
