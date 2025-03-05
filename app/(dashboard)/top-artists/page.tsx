@@ -5,3 +5,5 @@ export const TopArtistsPage = () => {
     </div>
   );
 };
+
+export default TopArtistsPage;
