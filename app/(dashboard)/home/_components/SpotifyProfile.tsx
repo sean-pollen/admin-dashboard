@@ -1,6 +1,11 @@
 'use client';
 
-import { Card, CardDescription, CardHeader, CardTitle } from '../../../../components/ui/card';
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '../../../../components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 
 async function fetchSpotifyProfile() {
@@ -17,7 +22,7 @@ export default function SpotifyProfile() {
   });
 
   return (
-    <Card>
+    <Card className={'w-1/2'}>
       <CardHeader>
         <CardTitle>Welcome {profile?.display_name}!</CardTitle>
         <CardDescription>You are logged in!</CardDescription>

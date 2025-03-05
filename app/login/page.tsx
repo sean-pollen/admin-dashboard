@@ -13,10 +13,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex justify-center items-start md:items-center p-8">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            This demo uses Spotify for authentication.
-          </CardDescription>
+          <CardTitle className="text-2xl text-center">
+            welcome
+          </CardTitle>
         </CardHeader>
         <CardFooter>
           <form
@@ -28,7 +27,7 @@ export default function LoginPage() {
             }}
             className="w-full"
           >
-            <Button className="w-full">Sign in with Spotify</Button>
+            <Button className="w-full">sign in with spotify</Button>
           </form>
         </CardFooter>
       </Card>
