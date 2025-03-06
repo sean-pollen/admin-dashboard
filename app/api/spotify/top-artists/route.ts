@@ -1,16 +1,21 @@
 import { auth } from '@/lib/auth';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-// Top artists for a user
-export async function GET() {
+// Top artists or tracks for a user
+export async function GET(request: NextRequest) {
   const session = await auth();
+  const { searchParams } = request.nextUrl;
+
+  const time_range = searchParams.get('time_range') || 'long_term';
+  const limit = searchParams.get('limit') || '50';
+  const offset = searchParams.get('offset') || '0';
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const searchResponse = await fetch(
-    `https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term`,
+    `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${time_range}&offset=${offset}`,
     {
       method: 'GET',
       headers: {

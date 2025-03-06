@@ -5,7 +5,8 @@ import {
   DiscAlbum,
   PanelLeft,
   Settings,
-  Package2
+  Package2,
+  MicVocal
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -66,6 +67,10 @@ function DesktopNav() {
 
         <NavItem href="/top-artists" label="Top Artists">
           <LineChart className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/top-tracks" label="Top Tracks">
+          <MicVocal className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
