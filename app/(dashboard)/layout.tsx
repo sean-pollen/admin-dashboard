@@ -61,16 +61,16 @@ function DesktopNav() {
           <Home className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/albums" label="Albums">
+        <NavItem href="/albums" label="Your Albums">
           <DiscAlbum className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/top-artists" label="Top Artists">
-          <LineChart className="h-5 w-5" />
+          <MicVocal className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/top-tracks" label="Top Tracks">
-          <MicVocal className="h-5 w-5" />
+          <LineChart className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
