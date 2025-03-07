@@ -1,11 +1,7 @@
-import ArtistsList from 'app/(dashboard)/top-artists/_components/ArtistsTable';
+import ArtistsList from 'app/(dashboard)/top-artists/_components/artist-table';
 
 const TopArtistsPage = () => {
-  return (
-    <div className='py-2'>
-      <ArtistsList />
-    </div>
-  );
+  return <ArtistsList />;
 };
 
 export default TopArtistsPage;

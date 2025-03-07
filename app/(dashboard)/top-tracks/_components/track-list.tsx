@@ -9,13 +9,34 @@ import { Separator } from '@/components/ui/separator';
 import { Track } from 'app/api/spotify/top-tracks/route';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function TrackList({
-  tracks,
-  isLoading = false
-}: {
-  tracks: Track[];
-  isLoading?: boolean;
-}) {
+import { QueryFunction, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import TimePeriodSelector, {
+  TimePeriod
+} from '@/components/ui/time-period-selector';
+
+const fetchTracks: QueryFunction<Track[]> = async ({
+  queryKey
+}) => {
+  const [, timePeriod] = queryKey as [string, TimePeriod]; // Type assertion
+  const queryParam = new URLSearchParams({ time_range: timePeriod });
+
+  const response = await fetch(`/api/spotify/top-tracks?${queryParam}`);
+  if (!response.ok) throw new Error('Failed to fetch tracks');
+
+  return response.json();
+};
+
+export default function TrackList() {
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<TimePeriod>('short_term');
+
+  const { data: tracks, isLoading } = useQuery<Track[], Error>({
+    queryKey: ['top-tracks', selectedPeriod],
+    queryFn: fetchTracks,
+    staleTime: 1000 * 60 * 5
+  });
+
   // Format duration from milliseconds to minutes:seconds
   const formatDuration = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
@@ -58,13 +79,19 @@ export default function TrackList({
 
   return (
     <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-6">Your Top Tracks</h1>
+      <div className="flex justify-between mb-4">
+        <h1 className="text-2xl font-bold">Your Top Tracks</h1>
+        <TimePeriodSelector
+          value={selectedPeriod}
+          onChange={setSelectedPeriod}
+        />
+      </div>
       <div className="grid gap-4">
         {isLoading
           ? Array(4)
               .fill(0)
               .map((_, index) => <TrackSkeleton key={index} />)
-          : tracks.map((track) => (
+          : tracks?.map((track) => (
               <Card key={track.id} className="overflow-hidden">
                 <div className="flex flex-col sm:flex-row">
                   <div className="relative w-full sm:w-auto sm:min-w-[150px] h-[150px]">

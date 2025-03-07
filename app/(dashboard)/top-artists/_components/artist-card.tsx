@@ -7,7 +7,7 @@ export const ArtistCard = (artist: Artist & { rank: number }) => {
   return (
     <Card
       key={artist.name}
-      className="hover:shadow-lg transition-shadow sm:w-full m:w-full lg:w-3/4 mx-auto my-4"
+      className="hover:shadow-lg transition-shadow w-full mx-auto my-4"
     >
       <div className={'flex flex-row'}>
         <Image
@@ -15,9 +15,9 @@ export const ArtistCard = (artist: Artist & { rank: number }) => {
           alt={artist.name}
           width={300}
           height={300}
-          className="w-1/3 p-4 rounded-sm"
+          className="w-1/5 p-4 rounded-sm"
         />
-        <CardContent className="p-4 w-2/3">
+        <CardContent className="p-4 w-4/5">
           <div className="flex flex-row items-center">
             <div>
               <CardTitle className="text-3xl font-bold">
