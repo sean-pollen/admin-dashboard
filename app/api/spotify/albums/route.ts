@@ -1,17 +1,24 @@
 import { auth } from '@/lib/auth';
-import { NextResponse } from 'next/server';
-
-const params = new URLSearchParams({
-  limit: '50'
-});
+import { NextRequest, NextResponse } from 'next/server';
 
 // Returns a users saved albums
-export async function GET() {
+
+export async function GET(req: NextRequest) {
   const session = await auth();
 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  const searchParams = req.nextUrl.searchParams;
+  const offset = searchParams.get('offset')
+    ? parseInt(searchParams.get('offset')!)
+    : 0;
+  const limit = 10;
+
+  const params = new URLSearchParams();
+  params.append('limit', limit.toString());
+  params.append('offset', offset.toString());
 
   const searchResponse = await fetch(
     `https://api.spotify.com/v1/me/albums?${params.toString()}`,
@@ -32,18 +39,19 @@ export async function GET() {
 
   const data = await searchResponse.json();
 
-  const albums: Album[] = data.items.map((item: SpotifyAlbumResponse) => {
-    return {
-      id: item.album.id,
-      name: item.album.name,
-      artist: item.album.artists.map((artist) => artist.name).join(', '),
-      image: item.album.images[0].url,
-      releaseDate: item.album.release_date,
-      totalTracks: item.album.total_tracks
-    };
-  });
+  const albums: Album[] = data.items.map((item: SpotifyAlbumResponse) => ({
+    id: item.album.id,
+    name: item.album.name,
+    artist: item.album.artists.map((artist) => artist.name).join(', '),
+    image: item.album.images[0].url,
+    releaseDate: item.album.release_date,
+    totalTracks: item.album.total_tracks
+  }));
 
-  return NextResponse.json(albums);
+  // Determine next offset
+  const nextOffset = data.next ? offset + limit : null;
+
+  return NextResponse.json({ albums, nextOffset });
 }
 
 export type Album = {

@@ -1,12 +1,29 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useQuery } from '@tanstack/react-query';
-import { Album } from 'app/api/spotify/albums/route';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Loader } from 'lucide-react';
 import Image from 'next/image';
 
-export const fetchSpotifyAlbums = async () => {
-  const res = await fetch('/api/spotify/albums');
+interface Album {
+  id: string;
+  name: string;
+  artist: string;
+  image: string;
+  releaseDate: string;
+  totalTracks: number;
+}
+
+interface FetchSpotifyAlbumsResponse {
+  albums: Album[];
+  nextOffset: number | null;
+}
+
+const fetchSpotifyAlbums = async ({
+  pageParam = 0
+}): Promise<FetchSpotifyAlbumsResponse> => {
+  const res = await fetch(`/api/spotify/albums?offset=${pageParam}`);
   return res.json();
 };
 
@@ -29,16 +46,23 @@ function SkeletonLoader() {
 
 export default function AlbumsGrid() {
   const {
-    data: albums,
-    isError,
-    isLoading
-  } = useQuery<Album[]>({
-    queryKey: ['spotifyAlbums'],
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError
+  } = useInfiniteQuery({
+    queryKey: ['albums'],
     queryFn: fetchSpotifyAlbums,
-    staleTime: 1000 * 60 * 5
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.nextOffset ?? null,
+    staleTime: 1000 * 60 * 60
   });
 
-  if (isLoading || !albums) {
+  const albums = data?.pages.flatMap((page) => page.albums) ?? [];
+
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 p-4">
         {Array.from({ length: 10 }).map((_, idx) => (
@@ -76,6 +100,16 @@ export default function AlbumsGrid() {
           </CardContent>
         </Card>
       ))}
+
+      {hasNextPage && (
+        <Button
+          className={'col-span-full'}
+          onClick={() => fetchNextPage()}
+          disabled={isFetchingNextPage}
+        >
+          {isFetchingNextPage ? <Loader /> : 'Load More'}
+        </Button>
+      )}
     </div>
   );
 }
