@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const offset = searchParams.get('offset')
     ? parseInt(searchParams.get('offset')!)
     : 0;
-  const limit = 10;
+  const limit = 20;
 
   const params = new URLSearchParams();
   params.append('limit', limit.toString());

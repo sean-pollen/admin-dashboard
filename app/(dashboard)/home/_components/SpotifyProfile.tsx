@@ -21,8 +21,10 @@ export default function SpotifyProfile() {
     staleTime: 1000 * 60 * 5
   });
 
+  console.log(profile)
+
   return (
-    <Card className={'w-1/2'}>
+    <Card className={'container my-4'}>
       <CardHeader>
         <CardTitle>Welcome {profile?.display_name}!</CardTitle>
         <CardDescription>You are logged in!</CardDescription>
