@@ -1,4 +1,6 @@
-import { handleLogin } from 'db/schema';
+import { db } from 'db';
+import { users, profiles } from 'db/schema';
+import { eq } from 'drizzle-orm';
 import NextAuth from 'next-auth';
 import SpotifyProvider from 'next-auth/providers/spotify';
 
@@ -37,3 +39,34 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }
   }
 });
+
+export const handleLogin = async (providerId: string, email: string) => {
+  const existingUser = await db
+    .selectDistinct()
+    .from(users)
+    .where(eq(users.providerId, `${providerId}`));
+
+  if (existingUser.length === 0) {
+    const [user] = await db
+      .insert(users)
+      .values({
+        providerId: providerId,
+        email: email,
+        createdAt: new Date()
+      })
+      .returning({ id: users.id });
+
+    await db.insert(profiles).values({
+      userId: user.id,
+      topAlbums: []
+    });
+  } else {
+    // Update user profile
+    await db
+      .update(users)
+      .set({
+        lastLogin: new Date()
+      })
+      .where(eq(users.providerId, `${providerId}`));
+  }
+};

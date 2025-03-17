@@ -1,6 +1,5 @@
-import { db } from 'db';
-import { eq, sql } from 'drizzle-orm';
-import { text, timestamp, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
+import { text, timestamp, pgTable, uuid, json } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id')
@@ -15,26 +14,29 @@ export const users = pgTable('users', {
 export type User = typeof users.$inferSelect;
 export type UserInsert = typeof users.$inferInsert;
 
-export const handleLogin = async (providerId: string, email: string) => {
-  const existingUser = await db
-    .selectDistinct()
-    .from(users)
-    .where(eq(users.providerId, `${providerId}`));
+export const usersRelations = relations(users, ({ one }) => ({
+  profile: one(profiles)
+}));
 
-  // Handle create new user
-  if (existingUser.length === 0) {
-    await db.insert(users).values({
-      providerId: providerId,
-      email: email,
-      createdAt: new Date()
-    });
-  } else {
-    // Update user profile
-    await db
-      .update(users)
-      .set({
-        lastLogin: new Date()
-      })
-      .where(eq(users.providerId, `${providerId}`));
-  }
+const timestamps = {
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
 };
+
+export const profiles = pgTable('profiles', {
+  id: uuid('id')
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  userId: uuid('user_id').references((): any => users.id),
+  location: text('location'),
+  bio: text('bio'),
+  topAlbums: json('top_albums'),
+  ...timestamps
+});
+
+export const profileRelations = relations(profiles, ({ one }) => ({
+  user: one(users, { fields: [profiles.userId], references: [users.id] })
+}));
+
+export type Profile = typeof profiles.$inferSelect;
+export type ProfileInsert = typeof profiles.$inferInsert;
