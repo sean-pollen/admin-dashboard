@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Loader } from 'lucide-react';
 import Image from 'next/image';
+import { useEffect, useRef, useCallback } from 'react';
 
 interface Album {
   id: string;
@@ -62,6 +63,37 @@ export default function AlbumsGrid() {
 
   const albums = data?.pages.flatMap((page) => page.albums) ?? [];
 
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [target] = entries;
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  useEffect(() => {
+    const element = loadMoreRef.current;
+    if (!element) return;
+
+    observerRef.current = new IntersectionObserver(handleObserver, {
+      rootMargin: '100px',
+      threshold: 0.1
+    });
+
+    observerRef.current.observe(element);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [handleObserver]);
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 p-4">
@@ -101,15 +133,18 @@ export default function AlbumsGrid() {
         </Card>
       ))}
 
-      {hasNextPage && (
-        <Button
-          className={'col-span-full'}
-          onClick={() => fetchNextPage()}
-          disabled={isFetchingNextPage}
-        >
-          {isFetchingNextPage ? <Loader /> : 'Load More'}
-        </Button>
-      )}
+      {/* Intersection Observer target for infinite scroll */}
+      <div ref={loadMoreRef} className="col-span-full flex justify-center py-4">
+        {isFetchingNextPage && (
+          <div className="flex items-center space-x-2">
+            <Loader className="h-5 w-5 animate-spin" />
+            <span className="text-sm text-gray-500">Loading more albums...</span>
+          </div>
+        )}
+        {!hasNextPage && albums.length > 0 && (
+          <p className="text-sm text-gray-500">You've reached the end of your albums</p>
+        )}
+      </div>
     </div>
   );
 }
