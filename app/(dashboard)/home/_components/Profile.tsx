@@ -72,8 +72,6 @@ export default function ProfilePage() {
     );
   }
 
-  console.log(user, spotifyProfile);
-
   return (
     <div className="w-full bg-black rounded-xl mx-auto my-4 max-w-4xl">
       <div className="rounded-xl shadow-sm overflow-hidden items-center">
